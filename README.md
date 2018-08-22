@@ -14,7 +14,7 @@ The Lambda function checks the JIT registered certificate against a whitelist st
 - IssuerCN - The CommonName of the certificate's Issuer
 - SerialNumber - The SerialNumber of the certificate
 
-To create the Table, use the [Whitelist-DynamoDB.json](../blob/master/Whitelist-DynamoDB.json) as the parameters.
+To create the Table, use the [Whitelist-DynamoDB.json](../master/Whitelist-DynamoDB.json) as the parameters.
 
 Insert items in the newly created Table for whitelisted certificates. 
 
@@ -44,7 +44,7 @@ This creates an archive in the parent directory - lambda-deployment.zip.
 
 Create a Lambda function for whitelisting the JIT registered certificates.
 Specify the trigger to be an AWS IoT event, specifying the JIT rule created earlier.
-Update the [role_policy.json](../blob/master/role_policy.json) by changing the resource for the DynamoDB policy with your own ARN.
+Update the [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your own ARN.
 Create a new Role for the Lambda function and use the role_policy.json as the policy document.  
 Upload the deployment package - lambda-deployment.zip to use as the code.
 
