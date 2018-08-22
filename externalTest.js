@@ -32,13 +32,13 @@ iot.describeCertificate({'certificateId': certificateId}, function(err, data) {
 
     var cert = Certificate.fromPEM(certPem);
     console.log(cert.serialNumber);
-    console.log(cert.subject.commonName);
+    console.log(cert.issuer.commonName);
     //console.log(cert);
     var params = {
-        TableName: "Whitelist2",
+        TableName: "Whitelist",
         Key: {
-            "IssuerDN": {
-                S: cert.subject.commonName
+            "IssuerCN": {
+                S: cert.issuer.commonName
             },
             "SerialNumber": {
                 S: cert.serialNumber

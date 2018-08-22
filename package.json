@@ -1,0 +1,23 @@
+{
+  "name": "aws-iot-sample",
+  "version": "1.0.0",
+  "description": "Lambda function for Whitelisting",
+  "main": "externalTest.js",
+  "dependencies": {
+    "aws-sdk": "^2.298.0",
+    "@fidm/x509": "^1.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maneeshsahu/aws-iot-sample.git"
+  },
+  "keywords": [
+    "artik"
+  ],
+  "author": "Maneesh Sahu <maneesh.sahu@ssi.samsung.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maneeshsahu/aws-iot-sample/issues"
+  },
+  "homepage": "https://github.com/maneeshsahu/aws-iot-sample#readme"
+}

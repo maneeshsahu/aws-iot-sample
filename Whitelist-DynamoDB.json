@@ -1,0 +1,36 @@
+{
+    "Table": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "IssuerCN",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "SerialNumber",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "Whitelist2",
+        "KeySchema": [
+            {
+                "AttributeName": "IssuerCN",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "SerialNumber",
+                "KeyType": "RANGE"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": 1534971023.277,
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-east-1:661666207641:table/Whitelist",
+        "TableId": "4133aef6-b38d-443b-ab1e-891c544e97b8"
+    }
+}
