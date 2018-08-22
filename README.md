@@ -39,14 +39,21 @@ From the command-line go to the root directory where this git repository is clon
 ```
 zip -r ../lambda-deployment.zip .
 ```
-
 This creates an archive in the parent directory - lambda-deployment.zip.
 
-Create a Lambda function for whitelisting the JIT registered certificates.
-Specify the trigger to be an AWS IoT event, specifying the JIT rule created earlier.
-Update the [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your own ARN.
-Create a new Role for the Lambda function and use the role_policy.json as the policy document.  
-Upload the deployment package - lambda-deployment.zip to use as the code.
+### Create the Lambda Function
+
+
+
+1. Create a Lambda function for whitelisting the JIT registered certificates.
+2. Specify the trigger to be an AWS IoT event, specifying the JIT rule created earlier.
+3. Update the [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your own ARN.
+4. Create a new Role for the Lambda function and use the role_policy.json as the policy document.  
+5. Upload the deployment package - lambda-deployment.zip to use as the code.
+6. Save the Function
+7. Modify the [TestEvent.json](../master/TestEvent.json) by changing the details to match your AWS configuration
+8. Test the Lambda function with the JSON 'Event'
+9. If you see no errors, this function is ready to be used to register JIT certificates.
 
 
 
