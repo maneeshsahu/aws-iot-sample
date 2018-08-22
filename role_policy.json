@@ -15,7 +15,8 @@
             "Action":[    
                 "iot:UpdateCertificate",  
                 "iot:CreatePolicy",  
-                "iot:AttachPrincipalPolicy"  
+                "iot:AttachPrincipalPolicy",
+                "iot:DescribeCertificate"  
             ],  
             "Resource":"*"  
         },

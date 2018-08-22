@@ -8,6 +8,7 @@ Saws/events/certificates/registered/<caCertificateID>
 // Modify these strings and messages
 
 const AWSregion = 'us-east-1'; // us-east-1
+const Certificate = require('@fidm/x509').Certificate;
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -22,6 +23,7 @@ exports.handler = function(event, context, callback) {
     var accountId = event.awsAccountId.toString().trim();
 
     var iot = new AWS.Iot({'region': region, apiVersion: '2015-05-28'});
+    var dynamoDB = new AWS.DynamoDB();
     var certificateId = event.certificateId.toString().trim();
     
      //Replace it with your desired topic prefix
@@ -92,25 +94,56 @@ exports.handler = function(event, context, callback) {
             Step 3) Lookup Whitelist Table in DynamoDB. If a match exists then update
             certificate status to ACTIVE
             */
+            iot.describeCertificate({'certificateId': certificateId}, function(err2, data2) {
+               if (err) {
+                 callback(err2, data2);       
+               }    
+               else {
+                console.log(data2);
+                var certPem = data2.certificateDescription.certificatePem;
             
-            /*
-            Step 4) Activate the certificate. Optionally, you can have your custom Certificate Revocation List (CRL) check
-            logic here and ACTIVATE the certificate only if it is not in the CRL. Revoke the certificate if it is in the CRL
-            */
-            iot.updateCertificate({
-                certificateId: certificateId,
-                newStatus: 'ACTIVE'
-            }, (err, data) => {
-                if (err) {
-                    console.log(err, err.stack); 
-                    callback(err, data);
-                }
-                else {
-                    console.log(data);   
-                    callback(null, "Success, created, attached policy and activated the certificate " + certificateId);
-                }
+                var cert = Certificate.fromPEM(certPem);
+                console.log(cert.serialNumber);
+                console.log(cert.issuer.commonName);
+
+                var params = {
+                    TableName: "Whitelist",
+                    Key: {
+                        "IssuerCN": {
+                            S: cert.issuer.commonName
+                        },
+                        "SerialNumber": {
+                            S: cert.serialNumber
+                        }
+                    }
+                };
+            
+                dynamoDB.getItem(params, function(error, dynamodata) {
+                    if (error) {
+                        console.error("Unable to lookup DynamoDB whitelist item. Error JSON:", JSON.stringify(error, null, 2));
+                        callback(error, dynamodata);
+                    } else {
+                        console.log("GetItem succeeded:", JSON.stringify(dynamodata, null, 2));
+                        /*
+                        Step 4) Activate the certificate. 
+                        */
+                        iot.updateCertificate({
+                            certificateId: certificateId,
+                            newStatus: 'ACTIVE'
+                        }, (err, data) => {
+                            if (err) {
+                                console.log(err, err.stack); 
+                                callback(err, data);
+                            }
+                            else {
+                                console.log(data);   
+                                callback(null, "Success, created, attached policy and activated the certificate " + certificateId);
+                            }
+                        });
+                    }
+                });
+               }
             });
         });
     });
- 
 }
