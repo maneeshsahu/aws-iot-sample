@@ -45,11 +45,14 @@ This creates an archive in the parent directory - lambda-deployment.zip.
 
 
 
-1. Create a Lambda function for whitelisting the JIT registered certificates.
-2. Specify the trigger to be an AWS IoT event, specifying the JIT rule created earlier.
-3. Update the [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your own ARN.
-4. Create a new Role for the Lambda function and use the role_policy.json as the policy document.  
-5. Upload the deployment package - lambda-deployment.zip to use as the code.
+1. Create a Lambda function for whitelisting the JIT registered certificates. 
+2. Specify the trigger to be - AWS IoT, configuring the JIT rule created earlier in AWS IoT.
+3. In the Function Code:
+a. Choose 'Upload a .ZIP file'. Specify the deployment package - lambda-deployment.zip as the upload.
+b. Select 'Node.js 6.10' or above as the Runtime
+c. Select index.handler (default)
+d. For the Execution role, select 'Create a custom role'. In the Role Summary, create a new IAM Role - 'lambda_iot_dynamodb_execution'.
+e. For the policy name, Edit the Policy Document. Tweak [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your DynamoDB Table's ARN.
 6. Save the Function
 7. Modify the [TestEvent.json](../master/TestEvent.json) by changing the details to match your AWS configuration
 8. Test the Lambda function with the JSON 'Event'

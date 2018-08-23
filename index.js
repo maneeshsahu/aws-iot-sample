@@ -95,7 +95,7 @@ exports.handler = function(event, context, callback) {
             certificate status to ACTIVE
             */
             iot.describeCertificate({'certificateId': certificateId}, function(err2, data2) {
-               if (err) {
+               if (err2) {
                  callback(err2, data2);       
                }    
                else {
