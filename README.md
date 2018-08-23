@@ -48,11 +48,13 @@ This creates an archive in the parent directory - lambda-deployment.zip.
 1. Create a Lambda function for whitelisting the JIT registered certificates. 
 2. Specify the trigger to be - AWS IoT, configuring the JIT rule created earlier in AWS IoT.
 3. In the Function Code:
+
 ...Choose 'Upload a .ZIP file'. Specify the deployment package - lambda-deployment.zip as the upload.
 ...Select 'Node.js 6.10' or above as the Runtime
 ...Select index.handler (default)
 ...For the Execution role, select 'Create a custom role'. In the Role Summary, create a new IAM Role - 'lambda_iot_dynamodb_execution'.
 ...For the policy name, Edit the Policy Document. Tweak [role_policy.json](../master/role_policy.json) by changing the resource for the DynamoDB policy with your DynamoDB Table's ARN.
+
 6. Save the Function
 7. Modify the [TestEvent.json](../master/TestEvent.json) by changing the details to match your AWS configuration
 8. Test the Lambda function with the JSON 'Event'
