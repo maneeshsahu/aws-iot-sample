@@ -1,13 +1,15 @@
 /** 
 This node.js Lambda function code creates and attaches an IoT policy to the 
-just-in-time registered certificate. It also activates the certificate. The Lambda
-function is attached as a rule engine action to the registration topic 
+just-in-time registered certificate. It also activates the certificate if a match is found in a DynamoDB table. 
+The Lambda function is attached as a rule engine action to the registration topic 
 Saws/events/certificates/registered/<caCertificateID>
 **/
 
 // Modify these strings and messages
 
-const AWSregion = 'us-east-1'; // us-east-1
+const AWSregion = 'us-west-2'; // us-west-2
+const DynamoDBTable = 'WhitelistTable'; // Name of the Whitelist Table in DynamoDB
+
 const Certificate = require('@fidm/x509').Certificate;
 
 const AWS = require('aws-sdk');
@@ -30,7 +32,7 @@ exports.handler = function(event, context, callback) {
     var topicName = `foo/bar/${certificateId}`;
 
     var certificateARN = `arn:aws:iot:${region}:${accountId}:cert/${certificateId}`;
-    var policyName = `Policy_${certificateId}`;
+    var policyName = `ArtikPolicy_${certificateId}`;
     
     //Policy that allows connect, publish, subscribe and receive
     var policy = {
@@ -107,7 +109,7 @@ exports.handler = function(event, context, callback) {
                 console.log(cert.issuer.commonName);
 
                 var params = {
-                    TableName: "Whitelist",
+                    TableName: DynamoDBTable,
                     Key: {
                         "IssuerCN": {
                             S: cert.issuer.commonName
@@ -115,15 +117,21 @@ exports.handler = function(event, context, callback) {
                         "SerialNumber": {
                             S: cert.serialNumber
                         }
-                    }
+                    },
+                    ProjectionExpression: "SerialNumber",
                 };
+                console.log("Looking up whitelist " + JSON.stringify(params))
             
                 dynamoDB.getItem(params, function(error, dynamodata) {
                     if (error) {
                         console.error("Unable to lookup DynamoDB whitelist item. Error JSON:", JSON.stringify(error, null, 2));
                         callback(error, dynamodata);
+                    } else if (!dynamodata.hasOwnProperty('Item')) {
+                        var msg = "No match for certificate found in Whitelist table. Issuer CN: '"  + cert.issuer.commonName + "', Serial #: " + cert.serialNumber;
+                        console.error(msg);
+                        callback(msg ,dynamodata);
                     } else {
-                        console.log("GetItem succeeded:", JSON.stringify(dynamodata, null, 2));
+                        console.log("Whitelist Entry found:", JSON.stringify(dynamodata, null, 2));
                         /*
                         Step 4) Activate the certificate. 
                         */
