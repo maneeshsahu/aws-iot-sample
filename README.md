@@ -24,12 +24,12 @@ Insert items in the newly created Table for whitelisted certificates.
 Follow AWS IoT Documentation to register the CA Certificate for JIT Registration
 
 ### Create JIT Rule
-Create a Rule to act on newly detected certificates associated with the CA certificate.
+Create a Rule to act on newly detected certificates associated with the CA certificate during the JIT registration process.
 
 ```
-SELECT * FROM '$aws/events/certificates/registered/605324c6cbbce99455bfa9b781b22c3b9bbe80a9c4df51b2b5ff81022f53a8ee'
+SELECT * FROM '$aws/events/certificates/registered/#'
 ```
-Replace '605324c6cbbce99455bfa9b781b22c3b9bbe80a9c4df51b2b5ff81022f53a8ee' with your CA certificate's AWS Certificate ID.
+
 
 ## Lambda
 
@@ -37,13 +37,12 @@ Replace '605324c6cbbce99455bfa9b781b22c3b9bbe80a9c4df51b2b5ff81022f53a8ee' with 
 From the command-line go to the root directory where this git repository is cloned and run the command below:
 
 ```
+npm install
 zip -r ../lambda-deployment.zip .
 ```
-This creates an archive in the parent directory - lambda-deployment.zip.
+This creates an archive in the parent directory - lambda-deployment.zip that contains the associated node module - fidm/x509 that is needed for this Lambda function.
 
 ### Create the Lambda Function
-
-
 
 1. Create a Lambda function for whitelisting the JIT registered certificates. 
 2. Specify the trigger to be - AWS IoT, configuring the JIT rule created earlier in AWS IoT.
